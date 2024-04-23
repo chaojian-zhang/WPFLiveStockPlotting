@@ -64,9 +64,13 @@ namespace WPFLiveStockPlotting
             switch (price.StockName)
             {
                 case "Stock 1":
-                    Stock1Price = price.Price; break;
+                    Stock1PriceChange = price.Price - (Stock1Price == null ? price.Price : Stock1Price.Value);
+                    Stock1Price = price.Price;
+                    break;
                 case "Stock 2":
-                    Stock2Price = price.Price; break;
+                    Stock2PriceChange = price.Price - (Stock2Price == null ? price.Price : Stock2Price.Value); 
+                    Stock2Price = price.Price;
+                    break;
                 default:
                     break;
             }

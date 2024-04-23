@@ -4,10 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFLiveStockPlotting"
+        xmlns:converters="clr-namespace:WPFLiveStockPlotting.Converters"
         xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource self}}">
+    <Window.Resources>
+        <converters:StockPriceDisplayConverter x:Key="StockPriceDisplayConverter"/>
+        <converters:StockPriceChangeColorConverter x:Key="StockPriceChangeColorConverter"/>
+    </Window.Resources>
     <DockPanel LastChildFill="True">
         <!-- Display Picker -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
@@ -23,18 +28,18 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" Background="DarkGray" Margin="4">
-                <Grid>
+                <StackPanel>
                     <Label Content="Stock 1" HorizontalAlignment="Center"/>
-                    <Label Content="{Binding Stock1Price}" HorizontalAlignment="Center"/>
-                    <Label Content="{Binding Stock1PriceChange}" HorizontalAlignment="Center"/>
-                </Grid>
+                    <Label Content="{Binding Stock1Price, Converter={StaticResource StockPriceDisplayConverter}}" HorizontalAlignment="Center"/>
+                    <Label Content="{Binding Stock1PriceChange, Converter={StaticResource StockPriceDisplayConverter}}" Foreground="{Binding Stock1PriceChange, Converter={StaticResource StockPriceChangeColorConverter}}" HorizontalAlignment="Center"/>
+                </StackPanel>
             </Border>
             <Border Grid.Column="1" Background="DarkGray" Margin="4">
-                <Grid>
+                <StackPanel>
                     <Label Content="Stock 2" HorizontalAlignment="Center"/>
-                    <Label Content="{Binding Stock1Price}" HorizontalAlignment="Center"/>
-                    <Label Content="{Binding Stock2PriceChange}" HorizontalAlignment="Center"/>
-                </Grid>
+                    <Label Content="{Binding Stock2Price, Converter={StaticResource StockPriceDisplayConverter}}" HorizontalAlignment="Center"/>
+                    <Label Content="{Binding Stock2PriceChange, Converter={StaticResource StockPriceDisplayConverter}}" Foreground="{Binding Stock2PriceChange, Converter={StaticResource StockPriceChangeColorConverter}}" HorizontalAlignment="Center"/>
+                </StackPanel>
             </Border>
         </Grid>
 

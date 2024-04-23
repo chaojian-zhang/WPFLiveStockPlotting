@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataSource\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CommonUtilities\CommonUtilities.csproj" />
     <ProjectReference Include="..\Contract\StockProviderContract\StockProviderContract.csproj" />
   </ItemGroup>
