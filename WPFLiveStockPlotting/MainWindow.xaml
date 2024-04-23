@@ -8,8 +8,40 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource self}}">
-    <Grid>
-        <ScottPlot:WpfPlot x:Name="WpfPlot1" />
-        <Label Content="{Binding DataSource}"/>
-    </Grid>
+    <DockPanel LastChildFill="True">
+        <!-- Display Picker -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Label Content="Pick a Stock" VerticalAlignment="Center"/>
+            <CheckBox Content="Stock 1" VerticalAlignment="Center"/>
+            <CheckBox Content="Stock 2" VerticalAlignment="Center"/>
+        </StackPanel>
+        
+        <!-- Main Sample Grid -->
+        <Grid DockPanel.Dock="Top" Height="120">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Background="DarkGray" Margin="4">
+                <Grid>
+                    <Label Content="Stock 1" HorizontalAlignment="Center"/>
+                    <Label Content="{Binding Stock1Price}" HorizontalAlignment="Center"/>
+                    <Label Content="{Binding Stock1PriceChange}" HorizontalAlignment="Center"/>
+                </Grid>
+            </Border>
+            <Border Grid.Column="1" Background="DarkGray" Margin="4">
+                <Grid>
+                    <Label Content="Stock 2" HorizontalAlignment="Center"/>
+                    <Label Content="{Binding Stock1Price}" HorizontalAlignment="Center"/>
+                    <Label Content="{Binding Stock2PriceChange}" HorizontalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Table View -->
+        <DataGrid DockPanel.Dock="Bottom" AutoGenerateColumns="True" Name="dataGrid1" />
+
+        <!-- Interactive View -->
+        <ScottPlot:WpfPlot x:Name="WpfPlot1" DockPanel.Dock="Top" />
+    </DockPanel>
 </Window>
