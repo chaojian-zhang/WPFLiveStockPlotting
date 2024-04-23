@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFLiveStockPlotting"
         xmlns:converters="clr-namespace:WPFLiveStockPlotting.Converters"
-        xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource self}}">
@@ -13,28 +12,21 @@
         <converters:StockPriceDisplayConverter x:Key="StockPriceDisplayConverter"/>
         <converters:StockPriceChangeColorConverter x:Key="StockPriceChangeColorConverter"/>
     </Window.Resources>
-    <DockPanel LastChildFill="True">
-        <!-- Display Picker -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Label Content="Pick a Stock" VerticalAlignment="Center"/>
-            <CheckBox Content="Stock 1" VerticalAlignment="Center"/>
-            <CheckBox Content="Stock 2" VerticalAlignment="Center"/>
-        </StackPanel>
-        
+    <Grid MouseDown="Grid_MouseDown">
         <!-- Main Sample Grid -->
-        <Grid DockPanel.Dock="Top" Height="120">
+        <Grid DockPanel.Dock="Top" Name="Panels">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Background="DarkGray" Margin="4">
+            <Border Grid.Column="0" Background="DarkGray" Margin="4" MouseDown="Border1_MouseDown">
                 <StackPanel>
                     <Label Content="Stock 1" HorizontalAlignment="Center"/>
                     <Label Content="{Binding Stock1Price, Converter={StaticResource StockPriceDisplayConverter}}" HorizontalAlignment="Center"/>
                     <Label Content="{Binding Stock1PriceChange, Converter={StaticResource StockPriceDisplayConverter}}" Foreground="{Binding Stock1PriceChange, Converter={StaticResource StockPriceChangeColorConverter}}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
-            <Border Grid.Column="1" Background="DarkGray" Margin="4">
+            <Border Grid.Column="1" Background="DarkGray" Margin="4" MouseDown="Border2_MouseDown">
                 <StackPanel>
                     <Label Content="Stock 2" HorizontalAlignment="Center"/>
                     <Label Content="{Binding Stock2Price, Converter={StaticResource StockPriceDisplayConverter}}" HorizontalAlignment="Center"/>
@@ -44,9 +36,6 @@
         </Grid>
 
         <!-- Table View -->
-        <DataGrid DockPanel.Dock="Bottom" AutoGenerateColumns="True" Name="dataGrid1" />
-
-        <!-- Interactive View -->
-        <ScottPlot:WpfPlot x:Name="WpfPlot1" DockPanel.Dock="Top" />
-    </DockPanel>
+        <DataGrid DockPanel.Dock="Bottom" AutoGenerateColumns="True" Name="HistoryDataGrid" Visibility="Collapsed" ItemsSource="{Binding CurrentSelectedHistory}"/>
+    </Grid>
 </Window>

@@ -14,11 +14,6 @@ namespace WPFLiveStockPlotting
         {
             InitializeComponent();
 
-            double[] dataX = { 1, 2, 3, 4, 5 };
-            double[] dataY = { 1, 4, 9, 16, 25 };
-            WpfPlot1.Plot.Add.Scatter(dataX, dataY);
-            WpfPlot1.Refresh();
-
             // Start client
             var client = new BaseClient();
             client.StockPriceReceived += StockPriceReceived;
@@ -42,9 +37,12 @@ namespace WPFLiveStockPlotting
         public double? Stock1PriceChange { get => _stock1PriceChange; set => SetField(ref _stock1PriceChange, value); }
         private double? _stock2PriceChange;
         public double? Stock2PriceChange { get => _stock2PriceChange; set => SetField(ref _stock2PriceChange, value); }
+
+        private ObservableCollection<StockPrice>? _currentSelectedHistory = null;
+        public ObservableCollection<StockPrice>? CurrentSelectedHistory { get => _currentSelectedHistory; set => SetField(ref _currentSelectedHistory, value); }
         #endregion
 
-        #region Data Binding - DO NOT FORGET TO IMPLEMENT INotifyPropertyChanged ON THE WINDOW CLASS
+        #region Data Binding
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -60,20 +58,65 @@ namespace WPFLiveStockPlotting
         #region Events
         public void StockPriceReceived(StockPrice price)
         {
-            StockPrices![price.StockName].Add(price);
-            switch (price.StockName)
+            Dispatcher.BeginInvoke(() =>
             {
-                case "Stock 1":
-                    Stock1PriceChange = price.Price - (Stock1Price == null ? price.Price : Stock1Price.Value);
-                    Stock1Price = price.Price;
-                    break;
-                case "Stock 2":
-                    Stock2PriceChange = price.Price - (Stock2Price == null ? price.Price : Stock2Price.Value); 
-                    Stock2Price = price.Price;
-                    break;
-                default:
-                    break;
+                StockPrices![price.StockName].Add(price);
+                switch (price.StockName)
+                {
+                    case "Stock 1":
+                        Stock1PriceChange = price.Price - (Stock1Price == null ? price.Price : Stock1Price.Value);
+                        Stock1Price = price.Price;
+                        break;
+                    case "Stock 2":
+                        Stock2PriceChange = price.Price - (Stock2Price == null ? price.Price : Stock2Price.Value);
+                        Stock2Price = price.Price;
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+        private void Border1_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Handle double-click
+            if (e.ClickCount == 2)
+            {
+                DisplayHistory("Stock 1");
+                e.Handled = true;
             }
+        }
+        private void Border2_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Handle double-click
+            if (e.ClickCount == 2)
+            {
+                DisplayHistory("Stock 2");
+                e.Handled = true;
+            }
+        }
+        private void Grid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Handle double-click
+            if (e.ClickCount == 2)
+            {
+                HideHistory();
+                e.Handled = true;
+            }
+        }
+        #endregion
+
+        #region Routines
+        private void DisplayHistory(string name)
+        {
+            HistoryDataGrid.Visibility = Visibility.Visible;
+            Panels.Visibility = Visibility.Collapsed;
+
+            CurrentSelectedHistory = StockPrices[name];
+        }
+        private void HideHistory()
+        {
+            HistoryDataGrid.Visibility = Visibility.Collapsed;
+            Panels.Visibility = Visibility.Visible;
         }
         #endregion
     }
